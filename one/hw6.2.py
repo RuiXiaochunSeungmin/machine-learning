@@ -1,3 +1,8 @@
+
+# coding: utf-8
+
+# In[51]:
+
 from scipy import io
 from scipy.stats import mode
 from heapq import nsmallest
@@ -14,8 +19,9 @@ sum_sq_element = np.zeros(10)
 for data in X_Y:
     i = int(data[d])
     count[i]+=1
+    sum_element[i]+=sum(data[:d])
     for j in range(784):
-        sum_element[i]+=data[j]
+       
         sum_sq_element[i]+=data[j]**2
 #print sum_element, count
 def norm_f(v):
@@ -25,23 +31,48 @@ def eval_f(theta):
     f+=sum(sum_sq_element) - 2*sum(sum_element*theta) + 784*sum(count*theta**2)
     f = f*0.5
     return f
-theta = np.zeros(10)
-delta_f = 784*theta*count-sum_element
-f_values = []
-iterations=0
-it_max = 1000
-while (norm_f(delta_f)>=1e-16) and (iterations<it_max) :
-        n = 0.000001
-        theta = theta - n*delta_f
-        delta_f = 784*theta*count-sum_element
-        f = eval_f(theta)
-        f_values.append(f)
-        #print delta_f
-        iterations+=1
 
-print('# Iterations:' + str(iterations))
-print('Minimum of f appears at theta='+str(theta))
-print('First derivative at minimum point: '+str(delta_f))
-plt.plot(range(iterations),f_values,'ro')
+
+# In[65]:
+
+#initialize
+
+it_max = 100000
+for n in [1e-6,1e-7,1e-8,1e-9]:
+    theta = np.zeros(10)
+    delta_f = 784*theta*count-sum_element
+    f_values = []
+    iterations=0
+    while (norm_f(delta_f)>1e-8) and (iterations<it_max) :
+
+            theta = theta - n*delta_f
+            delta_f = 784*theta*count-sum_element
+            f = eval_f(theta)
+            f_values.append(f)
+            #print delta_f
+            iterations+=1
+
+    print('# Iterations:' + str(iterations))
+    print('Minimum of f appears at theta='+str(theta))
+    print('First derivative at minimum point: '+str(delta_f))
+    plt.figure()
+    plt.plot(range(iterations),f_values,'ro')
+    plt.title('step size '+str(n))
+    plt.show()
+
+
+# In[68]:
+
+n = np.array([1e-6,1e-7,1e-8,1e-9])
+iteration = np.array([22,358,3692,37039])
+plt.figure()
+plt.loglog(n,iteration,'ro-')
+plt.xlabel('step size')
+plt.ylabel('iterations')
 plt.show()
-    
+
+
+# In[ ]:
+
+
+
