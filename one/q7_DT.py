@@ -19,6 +19,7 @@ n = len(X)
 k = int(np.sqrt(n))
 d = len(X[0]) - 1
 f_list = np.linspace(100,750,14)
+#function to minimize uncertainty in a node
 def entropy(y):
     m = len(y)
     count = np.zeros(10)
@@ -31,11 +32,13 @@ def entropy(y):
         else:
             H += -p*np.log(p)
     return H
+
 def split_node(X,y,d=784):
     H_old = entropy(y)
     opt_thres = 0
     H = H_old
     opt_f = 0
+    #choose from a list of popular features and thresholds based on observations
     for feature in f_list:
         for thres in [0,4,8,16,32,64,128,160,200]:     
             x_L = X[X[:,feature]<=thres]
@@ -46,6 +49,7 @@ def split_node(X,y,d=784):
             y_R = x_R[:,d]
            
             H_new = entropy(y_L)*1.0*len(x_L)/n + entropy(y_R)*1.0*len(x_R)/n
+            #test entropy decrease to find best feature and threshold
             if H_new<H:
                 H = H_new
                 opt_thres = thres
@@ -54,18 +58,20 @@ def split_node(X,y,d=784):
     x_R = X[X[:,opt_f]>opt_thres]
     y_L = x_L[:,d]
     y_R = x_R[:,d]
+    #This is equivalent to stopping a node from further splitting due to insufficient data points
     if len(y_L)==0 or len(y_R)==0:
         x_L = X
         x_R = X
         y_L = y
         y_R = y
     return x_L,x_R,y_L,y_R,opt_f,opt_thres
+#test against 2^depth hyperparameter
 K_list = [8,16,32,64,128,256,512,1024,2048]
 depth = []
 train_E=[]
 test_E=[]
 for K in K_list:
-    print K
+    #print K
     X = train_data
     n = len(X)
     k = int(np.sqrt(n))
@@ -77,21 +83,22 @@ for K in K_list:
     DT_node = []
     end_class = []
     y = X[:,d]
+    #initialize
     DT_cur = [[X,y]]
     
     for i in range(num_pop):
         X,y = DT_cur.pop(0)
-        
+        #optimal split
         x_L,x_R,y_L,y_R,opt_f,opt_thres = split_node(X,y,d)
         #print opt_f, opt_thres
         DT_node.append([opt_f,opt_thres])
         DT_cur.append([x_L,y_L])
         DT_cur.append([x_R,y_R])
     for node in DT_cur:
-        #print len(node[1])
+        #label each leaf node at the end of model
         class_label = int(mode(node[1])[0][0])
         end_class.append(class_label)
-    #print DT_node, end_class
+    
     error_train = 0
     for x in train_data:
         i = 0
@@ -103,6 +110,7 @@ for K in K_list:
                 i = 2*i + 1
             else:
                 i = 2*i + 2
+        #locate data point in a leaf node
         class_pred = end_class[i-num_pop]
         if class_pred!=x[d]:
             error_train+=1
@@ -122,7 +130,7 @@ for K in K_list:
         if class_pred!=x[d]:
             error_test+=1
     test_E.append(1.0*error_test/len(test_data))  
-
+#compare results
 plt.plot(depth,train_E,'b',label='train')
 plt.plot(depth,test_E,'r',label='test')
 plt.legend()
