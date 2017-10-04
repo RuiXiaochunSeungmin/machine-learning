@@ -1,3 +1,8 @@
+# Rui Ding | rd2622
+# Xiaochun Ma | xm2203
+# Seungmin Lee | sl3254
+
+
 import numpy as np
 def find_minimum(f,f_prime,f_doubleprime,x_0):
     x = x_0

@@ -1,3 +1,8 @@
+# Rui Ding | rd2622
+# Xiaochun Ma | xm2203
+# Seungmin Lee | sl3254
+
+
 from scipy import io
 from scipy.stats import mode
 import numpy as np

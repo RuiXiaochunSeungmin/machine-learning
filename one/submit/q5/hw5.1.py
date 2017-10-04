@@ -1,3 +1,6 @@
+# Rui Ding | rd2622
+# Xiaochun Ma | xm2203
+# Seungmin Lee | sl3254
 import pandas as pd
 import numpy as np
 import scipy.io
