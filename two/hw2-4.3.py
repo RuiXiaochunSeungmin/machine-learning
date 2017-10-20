@@ -44,6 +44,7 @@ def kernel_perceptron(T,X_train,Y_train):
             t = t+1
         Alpha[k,:] = alpha
     return Alpha,Y
+# Predict
 T_list = [500, 1000, 2000]
 testE_list = []
 n = len(train_y)
