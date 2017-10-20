@@ -45,14 +45,10 @@ def kernel_perceptron(T,X_train,Y_train):
         Alpha[k,:] = alpha
     return Alpha,Y
 T_list = [500, 1000, 2000]
-#trainE_list = []
 testE_list = []
 n = len(train_y)
 for T in T_list:
-    #V0
     print T
-    #train_error = V0(T,X_train,Y_train,X_train,Y_train)
-    #trainE_list.append(train_error)
     Alpha,Y = kernel_V0(T,train_x,train_y)
     wrong = 0
     for j in range(len(test_x)):
