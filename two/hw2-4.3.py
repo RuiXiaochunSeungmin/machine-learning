@@ -50,7 +50,7 @@ testE_list = []
 n = len(train_y)
 for T in T_list:
     print T
-    Alpha,Y = kernel_V0(T,train_x,train_y)
+    Alpha,Y = kernel__perceptron(T,train_x,train_y)
     wrong = 0
     for j in range(len(test_x)):
         print j
